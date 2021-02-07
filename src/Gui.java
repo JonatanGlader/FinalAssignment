@@ -55,7 +55,7 @@ Snygga gärna till/gör ett eget. Men tänk på att gör GUI:s INTE är ett kurs
             this.showPersons.setText(p.toString());
         }
 
-//Nedantåenda spaghetti är inte vacker...
+//Nedanståenda spaghetti är inte vacker...
 
 
         public void gotCommand(){
