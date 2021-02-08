@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Game {
+public class Game{
     Gui gui;
     List<Room> house = new ArrayList<>();
     List<Person> npcs = new ArrayList<>();
@@ -10,8 +10,8 @@ public class Game {
     List<Container> containers = new ArrayList<>();
 
     Room currentRoom;
-    String command;
 
+    String command;
     boolean gameRunning = true;
 
     //MyID:s
@@ -24,14 +24,47 @@ public class Game {
         setupHouse();
 
         this.gui = new Gui();
+    //Run game
+       while(gameRunning) {
 
-        command = gui.getCommand();
-        System.out.println(command);
+           command = gui.getCommand();
+           if (!command.equals("-1")) {
 
-        while(gameRunning) {
+               if (command.equalsIgnoreCase("Right")) {
+                    switchRoom('R');
+               }
+               if (command.equalsIgnoreCase("Left")) {
+                   switchRoom('L');
+               }
+               //Command to unlock the rooms with the needed key!
+               if (command.equalsIgnoreCase("Unlock")) {
+                   if(currentRoom.roomName.equals("UpperDeck")){
+                       if(house.get(0).locked){
+                            if()
+                       } else {
+                           //FelMeddelande karaktären kan gå in, rummet är öppet!
+                       }
+                   }
+                   else if (currentRoom.roomName.equals("Hold")){
+                       if(house.get(0).locked){
+                           if()
+                       } else {
+                           //FelMeddelande karaktären kan gå in, rummet är öppet!
+                       }
+                   }
+               }
+    //if the room the player is trying to get into is locked
+               if(currentRoom.locked) {
+                   //FelMeddelande
+                   if(currentRoom.roomName.equals("Brig")){
+                       currentRoom = house.get(3);
+                   }
+                   else if (currentRoom.roomName.equals("CaptainsQuarter")){
+                    currentRoom = house.get(1);
+                   }
+               }
 
-            command = gui.getCommand();
-            System.out.println(command);
+           }
         }
     }
 
@@ -47,11 +80,15 @@ public class Game {
         containers.add(new Container("Bed", 0, false, items.stream().filter(item -> item.id==chestKeyID).collect(Collectors.toList()).get(0)));
         containers.add(new Container("chest", chestKeyID, true, items.stream().filter(item -> item.id==captainQuartersKeyID).collect(Collectors.toList()).get(0)));
         containers.add(new Container("Bedside table", 0, false, items.stream().filter(item -> item.id==brigKeyID).collect(Collectors.toList()).get(0)));
+
+        //NPCs
+        npcs.add(new Person("Sailor Jeffersson", 2));
+        npcs.add(new Person("Sailor Steven", 3));
     }
 
     public void setupHouse() {
         house.add(new Room("CaptainsQuarter", 1, true, "Captains Quarter, the captain is sleeping in his bed, and there is a golden key right next to him on his Bedside table"));
-        house.add(new Room("UpperDeck", 2, false, "The Upperdeck, there is a sailor up here polishing the cannons and stairs going down to the Tweendeck"));
+        house.add(new Room("UpperDeck", 2, false, "The Upperdeck, sailor Jeffersson is up here polishing the cannons and there are stairs going down to the Tweendeck"));
         house.add(new Room("TweenDeck", 3, false, "The Tweendeck, this is the middle deck where sailors sleep and eat, there is a stair here down to the hold, a sailor at the stove and a bed in the corner."));
         house.add(new Room("Hold", 4, false, "The Hold, Here we store all our loot, there is one very shiny chest here, and there is also the locked brig here where your friend is imprisoned"));
         house.add(new Room("Brig", 5, true, "The brig!"));
@@ -62,6 +99,47 @@ public class Game {
         house.get(3).addContainer(containers.get(1));
         //add bed to tweendeck
         house.get(2).addContainer(containers.get(0));
+    }
+
+    public void switchRoom(char direction){
+        if(direction=='R'){
+            switch (currentRoom.roomNumber) {
+                case 1:
+                    currentRoom = house.get(1);
+                    break;
+                case 2:
+                    currentRoom = house.get(2);
+                    break;
+                case 3:
+                    currentRoom = house.get(3);
+                    break;
+                case 4:
+                    currentRoom = house.get(4);
+                    break;
+                case 5:
+                    //Skicka FelMeddelande
+                    break;
+            }
+        }
+        else if(direction=='L'){
+            switch (currentRoom.roomNumber) {
+                case 1:
+                    //Skicka FelMeddelande
+                    break;
+                case 2:
+                    currentRoom = house.get(1);
+                    break;
+                case 3:
+                    currentRoom = house.get(2);
+                    break;
+                case 4:
+                    currentRoom = house.get(3);
+                    break;
+                case 5:
+                    currentRoom = house.get(4);
+                    break;
+            }
+        }
     }
 }
 %

@@ -3,29 +3,29 @@ import java.util.Random;
 public class Person extends Npc{
 
     String name;
-    int currentRoom = 0;
+    int currentRoomInt = 0;
     GameObject item;
 
-    public Person(String name, int currentRoom, GameObject item) {
+    public Person(String name, int currentRoomInt, GameObject item) {
         this.name = name;
-        this.currentRoom = currentRoom;
+        this.currentRoomInt = currentRoomInt;
         this.item = item;
     }
-    public Person(String name, int currentRoom) {
+    public Person(String name, int currentRoomInt) {
         this.name = name;
-        this.currentRoom = currentRoom;
+        this.currentRoomInt = currentRoomInt;
     }
 
     public void changeRoom() {
-        if (this.currentRoom==0){
-            currentRoom += 1;
-        } else if (this.currentRoom==5) {
-            this.currentRoom -= 1;
+        if (this.currentRoomInt==0){
+            currentRoomInt += 1;
+        } else if (this.currentRoomInt==5) {
+            this.currentRoomInt -= 1;
         } else {
             Random random = new Random();
             if(random.nextBoolean()){
-                this.currentRoom +=1;
-            } else this.currentRoom -=1;
+                this.currentRoomInt +=1;
+            } else this.currentRoomInt -=1;
         }
     }
 

@@ -33,7 +33,6 @@ Snygga gärna till/gör ett eget. Men tänk på att gör GUI:s INTE är ett kurs
         //Returnera det senaste commitade kommandot
         public String getCommand(){
             if (this.gotCommand){
-                System.out.println(this.command);
                 return this.command;
             }
             return null;
