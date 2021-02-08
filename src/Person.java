@@ -4,13 +4,8 @@ public class Person extends Npc{
 
     String name;
     int currentRoomInt = 0;
-    GameObject item;
+    Inventory inventory = new Inventory(1);
 
-    public Person(String name, int currentRoomInt, GameObject item) {
-        this.name = name;
-        this.currentRoomInt = currentRoomInt;
-        this.item = item;
-    }
     public Person(String name, int currentRoomInt) {
         this.name = name;
         this.currentRoomInt = currentRoomInt;
@@ -28,23 +23,17 @@ public class Person extends Npc{
             } else this.currentRoomInt -=1;
         }
     }
-
+    //if inventory is full, return false
     public boolean pickupItem(GameObject item) {
-        if (this.item == null){
-            this.item = item;
-            return true;
-        } else return false;
+        return inventory.addItem(item);
     }
-
+/*
     public boolean hasItem() {
-        return this.item != null;
+        return inventory[0] != null;
     }
-
+*/
     public GameObject dropItem() {
-        GameObject newItem = this.item;
-        this.item = null;
-        return newItem;
-
+            return inventory.dropItem(inventory.toString());
     }
 
 }

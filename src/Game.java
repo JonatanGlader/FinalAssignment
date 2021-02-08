@@ -18,15 +18,18 @@ public class Game{
     int chestKeyID = 900;
     int captainQuartersKeyID = 905;
     int brigKeyID = 910;
+    int foodID = 500;
 
     public Game(){
         createObjects();
         setupHouse();
 
         this.gui = new Gui();
+       //**************************************************************************************************************
     //Run game
        while(gameRunning) {
 
+    //Get Commands
            command = gui.getCommand();
            if (!command.equals("-1")) {
 
@@ -36,24 +39,28 @@ public class Game{
                if (command.equalsIgnoreCase("Left")) {
                    switchRoom('L');
                }
+               if (command.equalsIgnoreCase("Pickup")) {
+
+               }
                //Command to unlock the rooms with the needed key!
                if (command.equalsIgnoreCase("Unlock")) {
                    if(currentRoom.roomName.equals("UpperDeck")){
                        if(house.get(0).locked){
                             if()
                        } else {
-                           //FelMeddelande karaktären kan gå in, rummet är öppet!
+                           //FelMeddelande karaktären kan gå in, rummet är öppet!----------------------------------
                        }
                    }
                    else if (currentRoom.roomName.equals("Hold")){
                        if(house.get(0).locked){
                            if()
                        } else {
-                           //FelMeddelande karaktären kan gå in, rummet är öppet!
+                           //FelMeddelande karaktären kan gå in, rummet är öppet!----------------------------------
                        }
                    }
                }
     //if the room the player is trying to get into is locked
+               //FLYTTA DENNA SÅ DEN INTE LOOPAS--------------------------------------------------
                if(currentRoom.locked) {
                    //FelMeddelande
                    if(currentRoom.roomName.equals("Brig")){
@@ -66,6 +73,7 @@ public class Game{
 
            }
         }
+       //***************************************************************************************************************
     }
 
 
@@ -74,12 +82,12 @@ public class Game{
         items.add(new Key("ChestKey", chestKeyID));
         items.add(new Key("CaptainsKey", captainQuartersKeyID));
         items.add(new Key("BrigKey", brigKeyID));
-        items.add(new Item());
+        items.add(new Item("Apple", foodID));
 
         //containers (chests etc) if locked, id is the required key
-        containers.add(new Container("Bed", 0, false, items.stream().filter(item -> item.id==chestKeyID).collect(Collectors.toList()).get(0)));
-        containers.add(new Container("chest", chestKeyID, true, items.stream().filter(item -> item.id==captainQuartersKeyID).collect(Collectors.toList()).get(0)));
-        containers.add(new Container("Bedside table", 0, false, items.stream().filter(item -> item.id==brigKeyID).collect(Collectors.toList()).get(0)));
+        containers.add(new Container("Bed", 0, false, items.stream().filter(item -> item.getID()==chestKeyID).collect(Collectors.toList()).get(0)));
+        containers.add(new Container("chest", chestKeyID, true, items.stream().filter(item -> item.getID()==captainQuartersKeyID).collect(Collectors.toList()).get(0)));
+        containers.add(new Container("Bedside table", 0, false, items.stream().filter(item -> item.getID()==brigKeyID).collect(Collectors.toList()).get(0)));
 
         //NPCs
         npcs.add(new Person("Sailor Jeffersson", 2));
@@ -101,7 +109,9 @@ public class Game{
         house.get(2).addContainer(containers.get(0));
     }
 
+    //If command is to go Right/Left
     public void switchRoom(char direction){
+    //Move to the room to the right
         if(direction=='R'){
             switch (currentRoom.roomNumber) {
                 case 1:
@@ -116,15 +126,18 @@ public class Game{
                 case 4:
                     currentRoom = house.get(4);
                     break;
+                //Can't go more right than this room
                 case 5:
-                    //Skicka FelMeddelande
+                    //Skicka FelMeddelande------------------------------------------------------------
                     break;
             }
         }
+    //Move to the room to the left
         else if(direction=='L'){
             switch (currentRoom.roomNumber) {
+                //Can't go more left than this room
                 case 1:
-                    //Skicka FelMeddelande
+                    //Skicka FelMeddelande---------------------------------------------------------------
                     break;
                 case 2:
                     currentRoom = house.get(1);
