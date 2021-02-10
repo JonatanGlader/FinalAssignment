@@ -4,6 +4,7 @@ import java.util.stream.Collectors;
 
 public class Game{
     Gui gui;
+    Player player = new Player("Steven", 4);
     List<Room> house = new ArrayList<>();
     List<Person> npcs = new ArrayList<>();
     List<GameObject> items = new ArrayList<>();
@@ -23,42 +24,87 @@ public class Game{
     public Game(){
         createObjects();
         setupHouse();
-
+        currentRoom = house.get(1);
         this.gui = new Gui();
-       //**************************************************************************************************************
+        Thread jeffersson = new Thread(npcs.get(0), "Sailor Jeffersson Thread");
+        System.out.println("Welcome! You are currently in room: " + currentRoom.toString());
+        jeffersson.start();
+//**********************************************************************************************************************
     //Run game
        while(gameRunning) {
 
     //Get Commands
+          // if(gui.gotCommand()){
            command = gui.getCommand();
            if (!command.equals("-1")) {
 
                if (command.equalsIgnoreCase("Right")) {
-                    switchRoom('R');
+                   switchRoom('R');
+                   System.out.println("Current room is: " + currentRoom.toString());
                }
                if (command.equalsIgnoreCase("Left")) {
                    switchRoom('L');
+                   System.out.println("Current room is: " + currentRoom.toString());
                }
                if (command.equalsIgnoreCase("Pickup")) {
+                   //DoSomething-------------------------------------------------------------------------------
+                   if (player.isTalking()) {
+                       //--------------------------------------------------------------------------------------------
+                       System.out.println("Trading with npc");
+                   } else if (currentRoom.gotContainer()) {
+                       if (!currentRoom.container.isLocked()) {
+                           //PickupItem----------------------------------------------------------------------------
+                           System.out.println("Container is unlocked and you can pickup item");
+                       } else {
+                           //ChestisLocked-------------------------------------------------------------------------
+                           System.out.println("Container is locked, try unlocking it first");
+                       }
 
+                   } else {
+                       //FelMeddelande, inget att plocka------------------------------------------------------------
+                       System.out.println("Nothing to pick up here");
+                   }
+               }
+               //Command to talk to a NPC in current room
+               if (command.equalsIgnoreCase("Talk")) {
+                   for (Person p : npcs) {
+                       if (p.currentRoomInt == currentRoom.roomNumber) {
+                           p.setTalking(true);
+                           player.setTalking(true);
+                           break;
+                       } else {
+                           //FelMeddelande, Ingen NPC i Rummet------------------------------------------------------
+                           System.out.println("No NPC in the room!");
+                       }
+                   }
                }
                //Command to unlock the rooms with the needed key!
                if (command.equalsIgnoreCase("Unlock")) {
-                   if(currentRoom.roomName.equals("UpperDeck")){
-                       if(house.get(0).locked){
-                            if()
+                   if (currentRoom.roomName.equals("UpperDeck")) {
+                       //Check if CaptainQuarter is locked
+                       if (house.get(0).locked) {
+
                        } else {
                            //FelMeddelande karaktären kan gå in, rummet är öppet!----------------------------------
+                           System.out.println("Room is locked");
                        }
-                   }
-                   else if (currentRoom.roomName.equals("Hold")){
-                       if(house.get(0).locked){
-                           if()
+                   } else if (currentRoom.roomName.equals("Hold")) {
+                       //Check if Brig is locked
+                       if (house.get(4).locked) {
+                           //Check if chest in Hold is locked
+                           if (currentRoom.container.isLocked()) {
+                               //-Meddelande, både låda och rum är låst, vad vill du låsa upp?
+                               System.out.println("There is a locked chest and a locked door in this room");
+                           } else {
+                               System.out.println("Brig unlocked");
+                               //-Här Blir Spelet Klart------------------------------------------------------------
+                           }
                        } else {
                            //FelMeddelande karaktären kan gå in, rummet är öppet!----------------------------------
                        }
                    }
                }
+           }
     //if the room the player is trying to get into is locked
                //FLYTTA DENNA SÅ DEN INTE LOOPAS--------------------------------------------------
                if(currentRoom.locked) {
@@ -72,8 +118,8 @@ public class Game{
                }
 
            }
-        }
-       //***************************************************************************************************************
+       // }
+//**********************************************************************************************************************
     }
 
 
@@ -93,7 +139,6 @@ public class Game{
         npcs.add(new Person("Sailor Jeffersson", 2));
         npcs.add(new Person("Sailor Steven", 3));
     }
-
     public void setupHouse() {
         house.add(new Room("CaptainsQuarter", 1, true, "Captains Quarter, the captain is sleeping in his bed, and there is a golden key right next to him on his Bedside table"));
         house.add(new Room("UpperDeck", 2, false, "The Upperdeck, sailor Jeffersson is up here polishing the cannons and there are stairs going down to the Tweendeck"));
@@ -109,6 +154,10 @@ public class Game{
         house.get(2).addContainer(containers.get(0));
     }
 
+    public void updateRoom(){
+
+    }
+    
     //If command is to go Right/Left
     public void switchRoom(char direction){
     //Move to the room to the right
@@ -155,4 +204,3 @@ public class Game{
         }
     }
 }
-%

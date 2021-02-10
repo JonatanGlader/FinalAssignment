@@ -33,9 +33,10 @@ Snygga gärna till/gör ett eget. Men tänk på att gör GUI:s INTE är ett kurs
         //Returnera det senaste commitade kommandot
         public String getCommand(){
             if (this.gotCommand){
+                gotCommand();
                 return this.command;
             }
-            return null;
+            return "-1";
 
         }
         //Här kan man updatera respektive fält:
@@ -55,8 +56,6 @@ Snygga gärna till/gör ett eget. Men tänk på att gör GUI:s INTE är ett kurs
         }
 
 //Nedanståenda spaghetti är inte vacker...
-
-
         public void gotCommand(){
             this.gotCommand = false;
         }

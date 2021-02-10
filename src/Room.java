@@ -7,6 +7,7 @@ public class Room {
     boolean locked = false;
     String description;
     Container container;
+    private boolean gotContainer;
 
     Room(String roomName, int roomNumber, boolean locked, String description) {
         this.roomName = roomName;
@@ -15,6 +16,7 @@ public class Room {
         this.description = description;
         if(roomNumber == 1) canGoLeft = false;
         if(roomNumber == 5) canGoRight = false;
+        gotContainer = false;
     }
 
     Room(String roomName, int roomNumber, boolean locked, String description, Container container) {
@@ -25,7 +27,10 @@ public class Room {
         this.container = container;
         if(roomNumber == 1) canGoLeft = false;
         if(roomNumber == 5) canGoRight = false;
+        gotContainer = true;
     }
+
+    public boolean gotContainer() { return gotContainer; }
 
     public void addContainer(Container container) {
         this.container = container;
@@ -37,6 +42,11 @@ public class Room {
 
     public String getDescription() {
         return this.description;
+    }
+
+@Override
+    public String toString() {
+        return this.roomName;
     }
 
 }

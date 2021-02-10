@@ -2,7 +2,7 @@ public class Container{
 
     String name;
     int id;
-    boolean locked;
+    private boolean locked;
     GameObject item;
     boolean empty = false;
 
@@ -16,6 +16,9 @@ public class Container{
     public Container(String name, boolean empty) {
         this.name = name;
         this.empty = empty;
+        this.locked = false;
     }
+
+    public boolean isLocked() { return locked; }
 
 }

@@ -28,7 +28,7 @@ public class Inventory {
                 item = null;
             } else placeHolder = new Item("NoSuchItem", 0);
         }
-        //if the returned item is "NuSuchItem and id 0, handle it as there is no item with the entered name and try again
+        //if the returned item is "NuSuchItem and id 0, handle it in the return as there is no item with the entered name and try again
         return placeHolder;
     }
 
