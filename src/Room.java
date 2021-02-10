@@ -49,4 +49,7 @@ public class Room {
         return this.roomName;
     }
 
+    public int getRoomNumber() {
+        return roomNumber;
+    }
 }

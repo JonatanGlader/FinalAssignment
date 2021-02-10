@@ -1,3 +1,3 @@
-public abstract class Npc implements Runnable{
+public abstract class Npc{
 
 }

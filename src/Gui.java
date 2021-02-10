@@ -13,6 +13,7 @@ Snygga gärna till/gör ett eget. Men tänk på att gör GUI:s INTE är ett kurs
         private JTextArea showRoom;
         private JTextArea showPersons;
         private JTextField input;
+        private JTextArea output;
         private JTextArea inventory;
         private String command;
         private boolean gotCommand;
@@ -43,17 +44,11 @@ Snygga gärna till/gör ett eget. Men tänk på att gör GUI:s INTE är ett kurs
         public void setShowRoom(String roomDescription){
             this.showRoom.setText(roomDescription);
          }
-        public void setShowPersons(Person person){
-            this.showPersons.setText(person.toString());
-        }
+        public void setShowPersons(String personDesc){ this.showPersons.setText(personDesc); }
         public void setShowInventory(Inventory i){
             this.input.setText(i.toString());
         }
-
-        //Add person to room
-        public void setPerson(Person p){
-            this.showPersons.setText(p.toString());
-        }
+        public void output(String output) { this.output.setText(output); }
 
 //Nedanståenda spaghetti är inte vacker...
         public void gotCommand(){
@@ -64,6 +59,7 @@ Snygga gärna till/gör ett eget. Men tänk på att gör GUI:s INTE är ett kurs
             this.panel.add(showPersons);
             this.panel.add(showRoom);
             this.panel.add(input);
+            this.panel.add(output);
             this.panel.add(inventory);
             this.panel.add(button);
 
@@ -74,9 +70,13 @@ Snygga gärna till/gör ett eget. Men tänk på att gör GUI:s INTE är ett kurs
             this.showPersons = new JTextArea("Persons");
             this.inventory = new JTextArea("Inventory");
             this.input = new JTextField("Give command");
+            this.output = new JTextArea(" ");
             this.showPersons.setEditable(false);
             this.showRoom.setEditable(false);
             this.inventory.setEditable(false);
+
+            //Styling
+            this.output.setForeground(Color.red);
 
             ActionListener inputListener = e -> {
                 this.command = input.getText();

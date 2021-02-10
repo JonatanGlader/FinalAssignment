@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class Game{
@@ -9,11 +11,15 @@ public class Game{
     List<Person> npcs = new ArrayList<>();
     List<GameObject> items = new ArrayList<>();
     List<Container> containers = new ArrayList<>();
+    UpdateNpc updateNpc;
+    UpdateGui updateGui;
 
     Room currentRoom;
 
     String command;
     boolean gameRunning = true;
+
+
 
     //MyID:s
     int chestKeyID = 900;
@@ -26,9 +32,22 @@ public class Game{
         setupHouse();
         currentRoom = house.get(1);
         this.gui = new Gui();
-        Thread jeffersson = new Thread(npcs.get(0), "Sailor Jeffersson Thread");
+        //Create Threads
+        updateNpc = new UpdateNpc(npcs.get(0), gui, currentRoom);
+        updateGui = new UpdateGui(gui, currentRoom, player, npcs.get(0), npcs.get(1));
+        Thread guiThread = new Thread(updateGui, "GUI Thread");
+        Thread jefferssonThread = new Thread(updateNpc, "Sailor Jeffersson Thread");
+        guiThread.start();
+        jefferssonThread.start();
+
+
         System.out.println("Welcome! You are currently in room: " + currentRoom.toString());
-        jeffersson.start();
+        updateRoom();
+        //Schedules
+        ScheduledThreadPoolExecutor pool = new ScheduledThreadPoolExecutor(5);
+        pool.scheduleAtFixedRate(updateGui ,0,500, TimeUnit.MILLISECONDS);
+        pool.scheduleAtFixedRate(updateNpc ,10,15, TimeUnit.SECONDS);
+
 //**********************************************************************************************************************
     //Run game
        while(gameRunning) {
@@ -68,7 +87,7 @@ public class Game{
                //Command to talk to a NPC in current room
                if (command.equalsIgnoreCase("Talk")) {
                    for (Person p : npcs) {
-                       if (p.currentRoomInt == currentRoom.roomNumber) {
+                       if (p.getCurrentRoomInt() == currentRoom.roomNumber) {
                            p.setTalking(true);
                            player.setTalking(true);
                            break;
@@ -107,15 +126,7 @@ public class Game{
            }
     //if the room the player is trying to get into is locked
                //FLYTTA DENNA SÅ DEN INTE LOOPAS--------------------------------------------------
-               if(currentRoom.locked) {
-                   //FelMeddelande
-                   if(currentRoom.roomName.equals("Brig")){
-                       currentRoom = house.get(3);
-                   }
-                   else if (currentRoom.roomName.equals("CaptainsQuarter")){
-                    currentRoom = house.get(1);
-                   }
-               }
+
 
            }
        // }
@@ -138,11 +149,12 @@ public class Game{
         //NPCs
         npcs.add(new Person("Sailor Jeffersson", 2));
         npcs.add(new Person("Sailor Steven", 3));
+        npcs.get(1).setDescription("Sailor Steven is cooking some fish at the stove ");
     }
     public void setupHouse() {
         house.add(new Room("CaptainsQuarter", 1, true, "Captains Quarter, the captain is sleeping in his bed, and there is a golden key right next to him on his Bedside table"));
-        house.add(new Room("UpperDeck", 2, false, "The Upperdeck, sailor Jeffersson is up here polishing the cannons and there are stairs going down to the Tweendeck"));
-        house.add(new Room("TweenDeck", 3, false, "The Tweendeck, this is the middle deck where sailors sleep and eat, there is a stair here down to the hold, a sailor at the stove and a bed in the corner."));
+        house.add(new Room("UpperDeck", 2, false, "The Upperdeck, \n  there are stairs going down to the Tweendeck"));
+        house.add(new Room("TweenDeck", 3, false, "The Tweendeck, \n this is the middle deck where sailors sleep and eat. \n there are stairs here leading down to the hold and there is a bed in the corner."));
         house.add(new Room("Hold", 4, false, "The Hold, Here we store all our loot, there is one very shiny chest here, and there is also the locked brig here where your friend is imprisoned"));
         house.add(new Room("Brig", 5, true, "The brig!"));
 
@@ -155,10 +167,28 @@ public class Game{
     }
 
     public void updateRoom(){
-
+      //Check so that the room isn't locked
+        if(currentRoom.locked) {
+            //FelMeddelande
+            if(currentRoom.roomName.equals("Brig")){
+                currentRoom = house.get(3);
+                gui.setShowRoom(currentRoom.getDescription());
+                gui.output("You can't enter the Brig since it's locked! \n you need to find a key!");
+                System.out.println("You have been placed in the Hold, you tried to enter a locked room!");
+            }
+            else if (currentRoom.roomName.equals("CaptainsQuarter")){
+                currentRoom = house.get(1);
+                gui.setShowRoom(currentRoom.getDescription());
+                gui.output("You can't enter the CaptainsQuarters since it's locked! \n you need to find a key!");
+                System.out.println("You have been placed in the Upperdeck, you tried to enter a locked room!");
+            }
+        }
+        updateNpc.updateCurrent(currentRoom);
+        updateGui.updateCurrent(currentRoom);
+        gui.setShowRoom(currentRoom.getDescription());
     }
-    
-    //If command is to go Right/Left
+
+  //IPlayer movement
     public void switchRoom(char direction){
     //Move to the room to the right
         if(direction=='R'){
@@ -189,18 +219,20 @@ public class Game{
                     //Skicka FelMeddelande---------------------------------------------------------------
                     break;
                 case 2:
-                    currentRoom = house.get(1);
+                    currentRoom = house.get(0);
                     break;
                 case 3:
-                    currentRoom = house.get(2);
+                    currentRoom = house.get(1);
                     break;
                 case 4:
-                    currentRoom = house.get(3);
+                    currentRoom = house.get(2);
                     break;
                 case 5:
-                    currentRoom = house.get(4);
+                    currentRoom = house.get(3);
                     break;
             }
         }
+        updateRoom();
     }
+
 }

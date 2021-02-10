@@ -3,47 +3,20 @@ import java.util.Random;
 public class Person extends Npc{
 
     String name;
-    int currentRoomInt = 0;
+    String description;
+    private int currentRoomInt = 0;
     Inventory inventory = new Inventory(1);
     boolean isTalking;
-    boolean suspended;
 
     public Person(String name, int currentRoomInt) {
         this.name = name;
         this.currentRoomInt = currentRoomInt;
         isTalking = false;
-        suspended = false;
-    }
-
-    @Override
-    public void run(){
-        while(true) {
-            sleep(15);
-            changeRoom();
-            System.out.println(this.name + " is in room " + currentRoomInt);
-            synchronized(this) {
-                while (suspended) {
-                    try {
-                        wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    }
-
-    private void sleep(long seconds) {
-    try {
-        Thread.sleep(seconds*1000);
-    } catch (InterruptedException e) {
-        e.printStackTrace();
-    }
     }
 
   //Randomly change room
     public void changeRoom() {
-        if (this.currentRoomInt==0){
+        if (this.currentRoomInt==1){
             currentRoomInt += 1;
         } else if (this.currentRoomInt==5) {
             this.currentRoomInt -= 1;
@@ -59,14 +32,16 @@ public class Person extends Npc{
     public void setTalking(boolean state){
         isTalking = state;
         //Flag wait method to suspend/resume Thread
-        if(state) { suspend(); } else { resume(); }
     }
-    synchronized void suspend() { suspended = true; }
-    synchronized void resume() { suspended = false; notify(); }
-
     //if inventory is full, return false
     public boolean pickupItem(GameObject item) {
         return inventory.addItem(item);
+    }
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    public String getDescription() {
+        return this.description;
     }
 /*
     public boolean hasItem() {
@@ -75,6 +50,14 @@ public class Person extends Npc{
 */
     public GameObject dropItem() {
             return inventory.dropItem(inventory.toString());
+    }
+
+    public int getCurrentRoomInt(){
+        return currentRoomInt;
+    }
+@Override
+    public String toString(){
+        return this.name + " " + this.description;
     }
 
 }
