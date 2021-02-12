@@ -40,15 +40,23 @@ Snygga gärna till/gör ett eget. Men tänk på att gör GUI:s INTE är ett kurs
             return "-1";
 
         }
+
         //Här kan man updatera respektive fält:
         public void setShowRoom(String roomDescription){
             this.showRoom.setText(roomDescription);
          }
         public void setShowPersons(String personDesc){ this.showPersons.setText(personDesc); }
-        public void setShowInventory(Inventory i){
-            this.input.setText(i.toString());
+        public void setShowInventory(String inventory){
+            this.inventory.setText(inventory);
         }
-        public void output(String output) { this.output.setText(output); }
+        public void output(String output) {
+            this.output.setText(output);
+            this.output.setForeground(Color.red);
+        }
+        public void message(String message) {
+            this.output.setText(message);
+            this.output.setForeground(Color.green);
+        }
 
 //Nedanståenda spaghetti är inte vacker...
         public void gotCommand(){
@@ -64,6 +72,7 @@ Snygga gärna till/gör ett eget. Men tänk på att gör GUI:s INTE är ett kurs
             this.panel.add(button);
 
         }
+
         private void setUpElements(){
             this.panel = new JPanel(new GridLayout(4,3));
             this.showRoom = new JTextArea("Room: ");

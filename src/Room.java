@@ -1,10 +1,16 @@
-public class Room {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Room implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 5269390184123840948L;
 
     String roomName;
     int roomNumber;
     boolean canGoLeft = true;
     boolean canGoRight = true;
-    boolean locked = false;
+    private boolean locked = false;
     String description;
     Container container;
     private boolean gotContainer;
@@ -19,7 +25,7 @@ public class Room {
         gotContainer = false;
     }
 
-    Room(String roomName, int roomNumber, boolean locked, String description, Container container) {
+    Room(String roomName, int roomNumber, boolean locked, Container container, String description) {
         this.roomName = roomName;
         this.roomNumber = roomNumber;
         this.locked = locked;
@@ -51,5 +57,23 @@ public class Room {
 
     public int getRoomNumber() {
         return roomNumber;
+    }
+
+    public boolean isLocked() {
+        return this.locked;
+    }
+    public void setLock(boolean locked) {
+        this.locked = locked;
+    }
+
+    public void setRoom(Room room) {
+        this.roomName = room.roomName;
+        this.roomNumber = room.roomNumber;
+        this.canGoLeft = room.canGoLeft;
+        this.canGoRight = room.canGoRight;
+        this.locked = room.locked;
+        this.description = room.getDescription();
+        this.container = room.container;
+        this.gotContainer = room.gotContainer();
     }
 }

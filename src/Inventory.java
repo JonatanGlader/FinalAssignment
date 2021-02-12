@@ -1,6 +1,12 @@
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Objects;
 
-public class Inventory {
+public class Inventory implements Serializable{
+    @Serial
+    private static final long serialVersionUID = 3390632699946134392L;
+
     private GameObject[] items;
     private int maxSize;
 
@@ -32,6 +38,13 @@ public class Inventory {
         return placeHolder;
     }
 
+    public GameObject dropFirstItem() {
+        GameObject placeHolder = new Item("", 0);
+        placeHolder = items[0];
+        items[0] = null;
+        return placeHolder;
+    }
+
     public String toString(){
         return Arrays.toString(this.items);
     }
@@ -47,5 +60,27 @@ public class Inventory {
         return -1;
 
 
+    }
+
+    public boolean findItem(int itemID) {
+        boolean found = false;
+        for(GameObject item : this.items) {
+            if(item!=null) {
+                if(item.getID()==itemID) {
+                    item = null;
+                    found = true;
+                } else found = false;
+            }
+        }
+        return found;
+        /*
+        Arrays.stream(this.items).filter((item) -> item.getID() == itemID).findAny().get();
+        */
+        //return true;
+    }
+    public boolean gotItems() {
+        if(Arrays.stream(this.items).allMatch(Objects::isNull)){
+            return false;
+        } else return true;
     }
 }

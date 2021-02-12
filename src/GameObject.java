@@ -1,4 +1,10 @@
-public abstract class GameObject {
+import java.io.Serial;
+import java.io.Serializable;
+
+public abstract class GameObject implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1079741198463759872L;
+
     private int id;
     private String name;
 

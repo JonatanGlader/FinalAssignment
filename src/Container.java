@@ -1,4 +1,10 @@
-public class Container{
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Container implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 35714810164337710L;
 
     String name;
     int id;
@@ -19,6 +25,15 @@ public class Container{
         this.locked = false;
     }
 
+    public GameObject takeItem(){
+        GameObject item = this.item;
+        this.item = null;
+        this.empty = true;
+        return item;
+    }
+
     public boolean isLocked() { return locked; }
+
+    public void unlock() { this.locked = false; }
 
 }

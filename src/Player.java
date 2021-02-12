@@ -1,11 +1,14 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serial;
+import java.io.Serializable;
 
-public class Player {
+public class Player implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 8820846388530363284L;
 
     String name;
     int health = 100;
-    Inventory inventory;
+    private Inventory inventory;
     private boolean isTalking;
 
     public Player(String name, int inventorySize) {
@@ -22,8 +25,23 @@ public class Player {
         return inventory.dropItem(itemName);
     }
   //Send item to be pickedup, returns false if inventory is full and true if succes
-    public boolean pickupItem(GameObject item) {
-        return inventory.addItem(item);
+    public void pickupItem(GameObject item) {
+        inventory.addItem(item);
+    }
+  //Inventory toString
+    public String getInventory() {
+        return this.inventory.toString();
+    }
+
+    public boolean checkItem(int itemID) {
+        return inventory.findItem(itemID);
+    }
+
+    public void setInventoryContains(Inventory inventory) {
+        this.inventory = inventory;
+    }
+    public Inventory getInventoryContains() {
+        return this.inventory;
     }
 }
 
